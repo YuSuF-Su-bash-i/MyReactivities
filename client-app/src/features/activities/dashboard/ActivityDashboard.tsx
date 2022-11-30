@@ -13,12 +13,24 @@ interface inputData {
   editMode: boolean
   openForm: (id: string) => void
   closeForm: () => void
-  handleCreateOrEditActivity: (activity: Activity) => void
-  handleDeleteActivity: (id: string) => void
+  handleCreateOrEditActivity: (activity: Activity) => void;
+  handleDeleteActivity: (id: string) => void;
+  submitting: boolean;
+  deleting: boolean;
 }
 
 
-export default function ActivityDashboard({ activities, selectedActivity, handleSelectActivity, handleCancelSelectedActivity, editMode, openForm, closeForm, handleCreateOrEditActivity, handleDeleteActivity }: inputData) {
+export default function ActivityDashboard({ activities, 
+                                            selectedActivity, 
+                                            handleSelectActivity, 
+                                            handleCancelSelectedActivity, 
+                                            editMode, 
+                                            openForm, 
+                                            closeForm, 
+                                            handleCreateOrEditActivity, 
+                                            handleDeleteActivity, 
+                                            submitting,
+                                            deleting }: inputData) {
   return (
     <Grid>
       <Grid.Column width='10'>
@@ -26,7 +38,8 @@ export default function ActivityDashboard({ activities, selectedActivity, handle
           activities={activities}
           selectedActivity={selectedActivity}
           handleSelectActivity={handleSelectActivity}
-          handleDeleteActivity={handleDeleteActivity} />
+          handleDeleteActivity={handleDeleteActivity}
+          deleting={deleting} />
       </Grid.Column>
       <Grid.Column width='6'>
         {selectedActivity && !editMode &&
@@ -36,7 +49,10 @@ export default function ActivityDashboard({ activities, selectedActivity, handle
             openForm={openForm}
           />}
         {editMode &&
-          <ActivityForm closeForm={closeForm} activity={selectedActivity} handleCreateOrEditActivity={handleCreateOrEditActivity} />
+          <ActivityForm closeForm={closeForm}
+            activity={selectedActivity}
+            handleCreateOrEditActivity={handleCreateOrEditActivity}
+            submitting={submitting} />
         }
       </Grid.Column>
     </Grid>

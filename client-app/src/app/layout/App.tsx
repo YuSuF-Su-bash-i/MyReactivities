@@ -1,20 +1,37 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
 import { Container } from 'semantic-ui-react'
 import { Activity } from '../models/activity'
 import NavBar from './NavBar'
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard'
 import { v4 as uuid } from 'uuid';
+import agent from '../api/agent'
+import LoadingComponent from './LoadingComponent'
 
 function App() {
-     const [activities, setActvities] = useState<Activity[]>([])
+     const [activities, setActivities] = useState<Activity[]>([])
      const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined)
      const [editMode, setEditMode] = useState(false)
+     const [loading, setLoading] = useState(true);
+     const [submitting, setSubmitting] = useState(false);
+     const [deleting, setDeleting] = useState(false);
 
      useEffect(() => {
-          axios.get<Activity[]>('http://localhost:5000/api/activities').then((resp) => {
-               setActvities(resp.data)
+          agent.Activities.list().then(resp => {
+               let activities: Activity[] = [];
+               resp.forEach(activity => {
+                    activity.date = activity.date.split('T')[0]
+                    activities.push(activity);
+               })
+               setActivities(activities);
+               setLoading(false);
           })
+          //V1
+          // axios.get('http://localhost:5000/api/activities').then((resp) => {
+          //      setActivities(resp.data)
+          //V2
+          // axios.get<Activity[]>('http://localhost:5000/api/activities').then((resp) => {
+          //      setActivities(resp.data)
+          // })
      }, [])
 
      function handleSelectActivity(id: string) {
@@ -36,12 +53,30 @@ function App() {
 
 
      function handleCreateOrEditActivity(activity: Activity) {
-          activity.id ?
-               setActvities([...activities.filter(s => s.id !== activity.id), activity])
-               : setActvities([...activities, { ...activity, id: uuid() }]);
+          setSubmitting(true);
+          if (activity.id) {
+               agent.Activities.update(activity).then(() => {
+                    setActivities([...activities.filter(s => s.id !== activity.id), activity])
+                    setSelectedActivity(activity);
+                    setEditMode(false);
+                    setSubmitting(false);
+               })
+          } else {
+               activity.id = uuid();
+               agent.Activities.create(activity).then(() => {
+                    setActivities([...activities, activity]);
+                    setSelectedActivity(activity);
+                    setEditMode(false);
+                    setSubmitting(false);
+               })
+          }
 
-          setEditMode(false);
-          setSelectedActivity(activity);
+          //just using local
+          // activity.id ?
+          //      setActivities([...activities.filter(s => s.id !== activity.id), activity])
+          //      : setActivities([...activities, { ...activity, id: uuid() }]);
+          // setEditMode(false);
+          // setSelectedActivity(activity);
 
           // amator versionum
           // if (activity.id === undefined) {
@@ -61,8 +96,14 @@ function App() {
 
      //y
      function handleDeleteActivity(id: string) {
-          setActvities([...activities.filter(s => s.id !== id)])
+          setDeleting(true);
+          agent.Activities.delete(id).then(() => {
+               setActivities([...activities.filter(s => s.id !== id)])
+               setDeleting(false);
+          })
      }
+
+     if (loading) return <LoadingComponent content='Loading app' />
 
      return (
           <>
@@ -78,6 +119,8 @@ function App() {
                          closeForm={handleCloseForm}
                          handleCreateOrEditActivity={handleCreateOrEditActivity}
                          handleDeleteActivity={handleDeleteActivity}
+                         submitting={submitting}
+                         deleting={deleting}
                     />
                </Container>
           </>
