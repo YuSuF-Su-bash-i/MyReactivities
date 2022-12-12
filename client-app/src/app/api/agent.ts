@@ -19,13 +19,6 @@ axios.interceptors.response.use(async resp => {
   }
 })
 
-//have to use promise and .then chain without async
-// return sleep(1000).then(()=> {
-//   return resp;
-// }).catch((error)=>{
-//   console.log(error);
-//   return Promise.reject(error);
-// })
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
