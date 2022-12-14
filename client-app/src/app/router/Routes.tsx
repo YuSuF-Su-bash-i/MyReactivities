@@ -3,7 +3,6 @@ import ActivityDashboard from "../../features/activities/dashboard/ActivityDashb
 import ActivityDetails from "../../features/activities/details/ActivityDetails";
 import ActivityForm from "../../features/activities/form/ActivityForm";
 import SampleScreen from "../../features/activities/Sample/SampleScreen";
-import HomePage from "../../features/home/HomePage";
 import App from "../layout/App";
 
 export const routes: RouteObject[] = [

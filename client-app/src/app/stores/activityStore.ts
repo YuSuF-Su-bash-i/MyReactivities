@@ -19,6 +19,18 @@ export default class ActivityStore {
     return Array.from(this.activityRegistry.values()).sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
   }
 
+  get groupedActivities() {
+    //reference to this url for reduce function:
+    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce
+    return Object.entries(
+      this.activitiesByDate.reduce((activitiesBucket, activity) => {
+        const date = activity.date; //this represents key for each of our objects
+        activitiesBucket[date] = activitiesBucket[date] ? [...activitiesBucket[date], activity] : [activity];
+        return activitiesBucket;
+      }, {} as { [key: string]: Activity[] })
+    )
+  }
+
   setSampleThing = async (data: string) => {
     this.sampleThing = data;
   }
