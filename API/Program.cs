@@ -1,4 +1,5 @@
 using API.Extensions;
+using API.Middleware;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -12,8 +13,9 @@ builder.Services.AddApplicationServices(builder.Configuration);
 // Configure the HTTP request pipeline
 var app = builder.Build();
 
-var env = builder.Environment;
-if (env.IsDevelopment())
+app.UseMiddleware<ExceptionMiddleware>();
+
+if (builder.Environment.IsDevelopment())
 {
   app.UseSwagger();
   app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
