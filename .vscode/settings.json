@@ -1,4 +1,6 @@
 {
-  "editor.tabSize": 2,
-  "workbench.tree.indent": 4
+    "editor.tabSize": 2,
+    "workbench.tree.indent": 4,
+    "prettier.printWidth": 150,
+    "prettier.tabWidth": 3
 }
