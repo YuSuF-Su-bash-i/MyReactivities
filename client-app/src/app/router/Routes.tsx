@@ -6,27 +6,26 @@ import SampleScreen from '../../features/activities/Sample/SampleScreen'
 import NotFound from '../../features/Errors/NotFound'
 import ServerError from '../../features/Errors/ServerError'
 import TestErrors from '../../features/Errors/TestError'
+import LoginForm from '../../features/users/LoginForm'
 import App from '../layout/App'
 
 export const routes: RouteObject[] = [
-     {
-          path: '/',
-          element: <App />,
-          children: [
-               { path: 'activities', element: <ActivityDashboard /> },
-               { path: 'activities/:id', element: <ActivityDetails /> },
-               {
-                    path: 'createActivity',
-                    element: <ActivityForm key='create' />,
-               },
-               { path: 'sampleScreen/:id', element: <SampleScreen /> },
-               { path: 'manage/:id', element: <ActivityForm key='manage' /> },
-               { path: 'errors', element: <TestErrors /> },
-               { path: 'not-found', element: <NotFound /> },
-               { path: 'server-error', element: <ServerError /> },
-               { path: '*', element: <Navigate replace to='/not-found' /> }, //if user enters meaningles url like localhost:5000/qweqwewqe then navigate to notfound page
-          ],
-     },
+   {
+      path: '/',
+      element: <App />,
+      children: [
+         { path: 'activities', element: <ActivityDashboard /> },
+         { path: 'activities/:id', element: <ActivityDetails /> },
+         { path: 'createActivity', element: <ActivityForm key='create' /> },
+         { path: 'sampleScreen/:id', element: <SampleScreen /> },
+         { path: 'manage/:id', element: <ActivityForm key='manage' /> },
+         { path: 'login', element: <LoginForm key='login' /> },
+         { path: 'errors', element: <TestErrors /> },
+         { path: 'not-found', element: <NotFound /> },
+         { path: 'server-error', element: <ServerError /> },
+         { path: '*', element: <Navigate replace to='/not-found' /> }, //if user enters meaningles url like localhost:5000/qweqwewqe then navigate to notfound page
+      ],
+   },
 ]
 
 export const router = createBrowserRouter(routes)
